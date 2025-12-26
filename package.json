@@ -27,6 +27,7 @@
     "@primeuix/themes": "^2.0.2",
     "@primevue/forms": "^4.5.3",
     "@tailwindcss/vite": "^4.1.14",
+    "jwt-decode": "^4.0.0",
     "openapi-typescript": "^7.10.1",
     "pinia": "^3.0.3",
     "primeicons": "^7.0.0",

@@ -3,19 +3,12 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth.ts'
 import { RouterLink } from 'vue-router'
 import Button from 'primevue/button'
-import { ref } from 'vue'
+import { useThemeStore } from '@/stores/theme.ts'
 
-const { userId } = storeToRefs(useAuthStore())
-
-function handleLogout() {
-  userId.value = null
-}
-
-function toggleDarkMode() {
-  document.documentElement.classList.toggle('dark-mode')
-  isDarkMode.value = !isDarkMode.value
-}
-const isDarkMode = ref(document.documentElement.classList.contains('dark-mode'))
+const authStore = useAuthStore()
+const { userId } = storeToRefs(authStore)
+const themeStore = useThemeStore()
+const { isDarkMode } = storeToRefs(themeStore)
 </script>
 
 <template>
@@ -28,7 +21,7 @@ const isDarkMode = ref(document.documentElement.classList.contains('dark-mode'))
       <div class="flex items-center gap-4 flex-shrink-0">
         <Button
           aria-label="Toggle light/dark mode"
-          @click="toggleDarkMode()"
+          @click="themeStore.toggleTheme()"
           :icon="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'"
           class="transition-all duration-300 hover:rotate-20"
           severity="secondary"
@@ -56,10 +49,10 @@ const isDarkMode = ref(document.documentElement.classList.contains('dark-mode'))
         </div>
         <div v-else class="flex items-center gap-3 sm:gap-1">
           <span
-            class="text-sm text-[var(--p-text-muted-color)] px-3 py-2 bg-[var(--p-surface-50)] rounded-md font-medium"
+            class="text-sm text-[var(--p-text-muted-color)] px-3 py-2 bg-[var(--p-surface-ground)] rounded-md font-medium"
             >{{ userId }}</span
           >
-          <Button label="Logout" size="small" severity="danger" text @click="handleLogout" />
+          <Button label="Logout" size="small" severity="danger" text @click="authStore.logout()" />
         </div>
       </div>
     </div>

@@ -17,6 +17,22 @@ Frontend repository for expense tracking app. WIP.
 npm install
 ```
 
+### Environment Configuration
+
+Create a `.env` file based on `.env.example`:
+
+```sh
+cp .env.example .env
+```
+
+Configure the backend API URL (default is `http://localhost:8000`):
+
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+For production, update this to your backend server URL.
+
 ### Compile and Hot-Reload for Development
 
 ```sh
