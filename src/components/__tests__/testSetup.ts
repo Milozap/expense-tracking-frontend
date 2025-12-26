@@ -1,4 +1,4 @@
-import { vi } from "vitest";
+import { vi } from 'vitest'
 
 Object.defineProperty(globalThis, 'localStorage', {
   value: {
@@ -8,11 +8,11 @@ Object.defineProperty(globalThis, 'localStorage', {
     clear: vi.fn(),
   },
   writable: true,
-});
+})
 
 Object.defineProperty(globalThis, 'matchMedia', {
   writable: true,
-  value: vi.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -22,4 +22,4 @@ Object.defineProperty(globalThis, 'matchMedia', {
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
   })),
-});
+})

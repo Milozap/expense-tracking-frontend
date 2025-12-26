@@ -1,7 +1,7 @@
-import {defineStore} from "pinia";
+import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    userId: null as number | null
+    userId: null as number | null,
   }),
 })
