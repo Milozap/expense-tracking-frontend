@@ -39,12 +39,12 @@ const { isDarkMode } = storeToRefs(themeStore)
       </div>
 
       <div class="flex items-center gap-4 flex-shrink-0 md:flex-1 md:justify-end sm:gap-2">
-        <div v-if="!userId" class="flex items-center gap-3 sm:gap-1">
+        <div v-if="!userId" class="auth-buttons flex items-center gap-3 sm:gap-1">
           <RouterLink to="/login" class="no-underline flex items-center">
-            <Button label="Login" size="small" text severity="secondary" />
+            <Button label="Login" size="small" text severity="primary" />
           </RouterLink>
           <RouterLink to="/register" class="no-underline flex items-center">
-            <Button label="Register" size="small" severity="primary" />
+            <Button label="Register" size="small" text severity="primary" />
           </RouterLink>
         </div>
         <div v-else class="flex items-center gap-3 sm:gap-1">
@@ -58,3 +58,15 @@ const { isDarkMode } = storeToRefs(themeStore)
     </div>
   </nav>
 </template>
+
+<style scoped>
+/* Override PrimeVue text button hover styles for auth buttons */
+.auth-buttons :deep(.p-button-text:hover) {
+  background: transparent;
+  opacity: 0.8;
+}
+
+.auth-buttons :deep(.p-button-text) {
+  transition: opacity 200ms ease, color 200ms ease;
+}
+</style>
