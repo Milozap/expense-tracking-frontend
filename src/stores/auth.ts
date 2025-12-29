@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { clearTokens, getAccessToken, login, setTokens } from '@/services/api'
+import {clearTokens, getAccessToken, login, register, setTokens} from '@/services/api'
 import { jwtDecode } from 'jwt-decode'
 
 interface JWTPayload {
@@ -41,6 +41,20 @@ export const useAuthStore = defineStore('auth', {
       clearTokens()
       this.userId = null
       this.isAuthenticated = false
+    },
+    async register(username: string, email: string, password: string) {
+      this.isLoading = true
+      try {
+        const userInfo = await register(username, email, password)
+        setTokens(userInfo.access)
+        this.userId = this.decodeUserIdFromToken(userInfo.access)
+        this.isAuthenticated = true
+      } catch (e: unknown) {
+        console.error(e)
+        throw e
+      } finally {
+        this.isLoading = false
+      }
     },
     isTokenExpired(token: string): boolean {
       try {

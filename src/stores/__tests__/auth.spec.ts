@@ -230,4 +230,74 @@ describe('Auth Store', () => {
     expect(auth.isAuthenticated).toBe(false)
     expect(auth.userId).toBeNull()
   })
+
+  it('should set isLoading to true while register request is pending', async () => {
+    vi.mocked(jwtModule.jwtDecode).mockReturnValue({
+      user_id: 123,
+      exp: 1700000000,
+    })
+    const auth = useAuthStore()
+    vi.mocked(api.register).mockImplementation(
+      () => new Promise((resolve) => setTimeout(() => resolve({ access: 'token' }), 100)),
+    )
+
+    const promise = auth.register('testuser', 'test@example.com', 'TestPass123!')
+    expect(auth.isLoading).toBe(true)
+    await promise
+  })
+
+  it('should set isLoading to false after successful registration', async () => {
+    vi.mocked(jwtModule.jwtDecode).mockReturnValue({
+      user_id: 123,
+      exp: 1700000000,
+    })
+    const auth = useAuthStore()
+    vi.mocked(api.register).mockResolvedValue({
+      access: 'test-access-token',
+    })
+
+    await auth.register('testuser', 'test@example.com', 'TestPass123!')
+    expect(auth.isLoading).toBe(false)
+  })
+
+  it('should set isLoading to false after failed registration', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const auth = useAuthStore()
+    vi.mocked(api.register).mockRejectedValue(new Error('Username already exists'))
+
+    try {
+      await auth.register('existinguser', 'test@example.com', 'TestPass123!')
+    } catch {}
+    expect(auth.isLoading).toBe(false)
+  })
+
+  it('should set isAuthenticated to true on successful registration', async () => {
+    const auth = useAuthStore()
+    vi.mocked(api.register).mockResolvedValue({
+      access: 'test-access-token',
+    })
+
+    await auth.register('testuser', 'test@example.com', 'TestPass123!')
+    expect(auth.isAuthenticated).toBe(true)
+  })
+
+  it('should store token via api service on successful registration', async () => {
+    const auth = useAuthStore()
+    vi.mocked(api.register).mockResolvedValue({
+      access: 'test-access-token',
+    })
+
+    await auth.register('testuser', 'test@example.com', 'TestPass123!')
+    expect(api.setTokens).toHaveBeenCalledWith('test-access-token')
+  })
+
+  it('should throw error on registration failure', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const auth = useAuthStore()
+    vi.mocked(api.register).mockRejectedValue(new Error('Username already exists'))
+
+    await expect(auth.register('existinguser', 'test@example.com', 'TestPass123!')).rejects.toThrow(
+      'Username already exists',
+    )
+  })
 })
