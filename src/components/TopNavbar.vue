@@ -67,6 +67,8 @@ const { isDarkMode } = storeToRefs(themeStore)
 }
 
 .auth-buttons :deep(.p-button-text) {
-  transition: opacity 200ms ease, color 200ms ease;
+  transition:
+    opacity 200ms ease,
+    color 200ms ease;
 }
 </style>

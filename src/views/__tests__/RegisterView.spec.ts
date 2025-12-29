@@ -45,8 +45,8 @@ describe('RegisterView', () => {
         plugins: [PrimeVue, pinia, router],
         components: {
           InputText,
-          Button
-        }
+          Button,
+        },
       },
     })
   }

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import {clearTokens, getAccessToken, login, register, setTokens} from '@/services/api'
+import { clearTokens, getAccessToken, login, register, setTokens } from '@/services/api'
 import { jwtDecode } from 'jwt-decode'
 
 interface JWTPayload {

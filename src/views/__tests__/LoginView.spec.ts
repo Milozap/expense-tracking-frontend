@@ -3,7 +3,6 @@ import { setActivePinia, createPinia } from 'pinia'
 import { flushPromises, mount } from '@vue/test-utils'
 import { createRouter, createMemoryHistory } from 'vue-router'
 import LoginView from '@/views/LoginView.vue'
-import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import { useAuthStore } from '@/stores/auth'
 import PrimeVue from 'primevue/config'
@@ -50,17 +49,17 @@ describe('LoginView', () => {
   it('should render username input field', () => {
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    expect(usernameInputs.length).toBeGreaterThan(0)
-    expect(usernameInputs[0]?.attributes('type')).toBe('text')
+    const usernameInput = wrapper.find('#username')
+    expect(usernameInput.exists()).toBe(true)
+    expect(usernameInput.attributes('type')).toBe('text')
   })
 
   it('should render password input field', () => {
     const wrapper = mountComponent()
 
-    const passwordInputs = wrapper.findAllComponents(InputText)
-    expect(passwordInputs.length).toBeGreaterThanOrEqual(2)
-    expect(passwordInputs[1]?.attributes('type')).toBe('password')
+    const passwordInput = wrapper.find('#password')
+    expect(passwordInput.exists()).toBe(true)
+    expect(passwordInput.attributes('type')).toBe('password')
   })
 
   it('should render submit button', () => {
@@ -83,8 +82,10 @@ describe('LoginView', () => {
   it('should show error message when username is empty on blur', async () => {
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    await usernameInputs[0]?.trigger('blur')
+    const usernameInput = wrapper.find('#username')
+    expect(usernameInput.exists()).toBe(true)
+
+    await usernameInput.trigger('blur')
     await nextTick()
 
     const errorMessage = wrapper.text()
@@ -94,8 +95,10 @@ describe('LoginView', () => {
   it('should show error message when password is empty on blur', async () => {
     const wrapper = mountComponent()
 
-    const passwordInputs = wrapper.findAllComponents(InputText)
-    await passwordInputs[1]?.trigger('blur')
+    const passwordInput = wrapper.find('#password')
+    expect(passwordInput.exists()).toBe(true)
+
+    await passwordInput.trigger('blur')
     await nextTick()
 
     const errorMessage = wrapper.text()
@@ -105,11 +108,13 @@ describe('LoginView', () => {
   it('should clear username error when user modifies the field', async () => {
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    await usernameInputs[0]?.trigger('blur')
+    const usernameInput = wrapper.find('#username')
+    expect(usernameInput.exists()).toBe(true)
+
+    await usernameInput.trigger('blur')
     await nextTick()
 
-    await usernameInputs[0]?.setValue('testuser')
+    await usernameInput.setValue('testuser')
     await nextTick()
 
     const errorMessage = wrapper.text()
@@ -119,11 +124,13 @@ describe('LoginView', () => {
   it('should clear password error when user modifies the field', async () => {
     const wrapper = mountComponent()
 
-    const passwordInputs = wrapper.findAllComponents(InputText)
-    await passwordInputs[1]?.trigger('blur')
+    const passwordInput = wrapper.find('#password')
+    expect(passwordInput.exists()).toBe(true)
+
+    await passwordInput.trigger('blur')
     await nextTick()
 
-    await passwordInputs[1]?.setValue('password123')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const errorMessage = wrapper.text()
@@ -143,11 +150,13 @@ describe('LoginView', () => {
   it('should enable submit button when form is valid', async () => {
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const buttons = wrapper.findAllComponents(Button)
@@ -164,11 +173,13 @@ describe('LoginView', () => {
 
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const buttons = wrapper.findAllComponents(Button)
@@ -187,11 +198,13 @@ describe('LoginView', () => {
 
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -206,11 +219,13 @@ describe('LoginView', () => {
     vi.spyOn(auth, 'login').mockRejectedValue(new Error('Invalid credentials'))
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -231,18 +246,20 @@ describe('LoginView', () => {
 
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const form = wrapper.find('form')
     await form.trigger('submit')
     await nextTick()
 
-    await usernameInputs[0]?.setValue('otheruser')
+    await usernameInput.setValue('otheruser')
     await nextTick()
 
     const errorMessage = wrapper.text()
@@ -254,11 +271,13 @@ describe('LoginView', () => {
 
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -278,11 +297,13 @@ describe('LoginView', () => {
 
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -301,11 +322,13 @@ describe('LoginView', () => {
 
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -335,11 +358,13 @@ describe('LoginView', () => {
 
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -358,11 +383,13 @@ describe('LoginView', () => {
 
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -386,11 +413,13 @@ describe('LoginView', () => {
 
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -409,11 +438,13 @@ describe('LoginView', () => {
 
     const wrapper = mountComponent()
 
-    const usernameInputs = wrapper.findAllComponents(InputText)
-    const passwordInputs = wrapper.findAllComponents(InputText)
+    const usernameInput = wrapper.find('#username')
+    const passwordInput = wrapper.find('#password')
+    expect(usernameInput.exists()).toBe(true)
+    expect(passwordInput.exists()).toBe(true)
 
-    await usernameInputs[0]?.setValue('testuser')
-    await passwordInputs[1]?.setValue('password123')
+    await usernameInput.setValue('testuser')
+    await passwordInput.setValue('password123')
     await nextTick()
 
     const form = wrapper.find('form')

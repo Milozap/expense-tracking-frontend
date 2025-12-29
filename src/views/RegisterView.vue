@@ -1,48 +1,52 @@
 <script setup lang="ts">
-import {computed, ref} from "vue";
-import {useAuthStore} from "@/stores/auth.ts";
-import {useToast} from "primevue/usetoast";
-import {useRoute, useRouter} from "vue-router";
+import { computed, ref } from 'vue'
+import { useAuthStore } from '@/stores/auth.ts'
+import { useToast } from 'primevue/usetoast'
+import { useRouter } from 'vue-router'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 
-const auth = useAuthStore();
-const toast = useToast();
-const router = useRouter();
-const route = useRoute();
+const auth = useAuthStore()
+const toast = useToast()
+const router = useRouter()
 
-const username = ref<string>('');
-const usernameError = ref<string>('');
-const email = ref<string>('');
-const emailError = ref<string>('');
-const password = ref<string>('');
-const passwordError = ref<string>('');
-const confirmPassword = ref<string>('');
-const confirmPasswordError = ref<string>('');
-const isLoading = ref(false);
+const username = ref<string>('')
+const usernameError = ref<string>('')
+const email = ref<string>('')
+const emailError = ref<string>('')
+const password = ref<string>('')
+const passwordError = ref<string>('')
+const confirmPassword = ref<string>('')
+const confirmPasswordError = ref<string>('')
+const isLoading = ref(false)
 
 const isFormValid = computed(() => {
-  const hasRequiredFields = !!(username.value && email.value && password.value && confirmPassword.value);
+  const hasRequiredFields = !!(
+    username.value &&
+    email.value &&
+    password.value &&
+    confirmPassword.value
+  )
 
   const hasNoValidationErrors = !(
-      usernameError.value ||
-      emailError.value ||
-      passwordError.value ||
-      confirmPasswordError.value
-  );
+    usernameError.value ||
+    emailError.value ||
+    passwordError.value ||
+    confirmPasswordError.value
+  )
 
-  const isPasswordStrong = Object.values(passwordStrength.value).every(Boolean);
+  const isPasswordStrong = Object.values(passwordStrength.value).every(Boolean)
 
-  const passwordsMatch = password.value === confirmPassword.value;
+  const passwordsMatch = password.value === confirmPassword.value
 
-  return hasRequiredFields && hasNoValidationErrors && isPasswordStrong && passwordsMatch;
-});
+  return hasRequiredFields && hasNoValidationErrors && isPasswordStrong && passwordsMatch
+})
 
 const passwordStrength = computed(() => {
-  const lowerCaseLetters = /[a-z]/;
-  const upperCaseLetters = /[A-Z]/;
-  const numbers = /\d/;
-  const specialCharacters = /[!@#$%^&*._-]/;
+  const lowerCaseLetters = /[a-z]/
+  const upperCaseLetters = /[A-Z]/
+  const numbers = /\d/
+  const specialCharacters = /[!@#$%^&*._-]/
 
   return {
     minLength: password.value.length >= 8,
@@ -50,69 +54,72 @@ const passwordStrength = computed(() => {
     hasLowercase: password.value.match(lowerCaseLetters),
     hasNumber: password.value.match(numbers),
     hasSpecial: password.value.match(specialCharacters),
-  };
+  }
 })
 
 function validateUsername() {
   if (!username.value) {
-    usernameError.value = 'Username is required';
+    usernameError.value = 'Username is required'
   }
 }
 
 function clearUsernameError() {
-  usernameError.value = '';
+  usernameError.value = ''
 }
 
 function validateEmail() {
   const emailRegex =
-    /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+    /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
   if (!email.value) {
-    emailError.value = 'Email is required';
-    return;
+    emailError.value = 'Email is required'
+    return
   }
 
   if (!email.value.match(emailRegex)) {
-    emailError.value = 'The email format is not valid';
+    emailError.value = 'The email format is not valid'
   }
 }
 
 function clearEmailError() {
-  emailError.value = '';
+  emailError.value = ''
 }
 
 function validatePassword() {
   if (!password.value) {
-    passwordError.value = 'Password is required';
-    return;
+    passwordError.value = 'Password is required'
+    return
   }
 
-  if (!(passwordStrength.value.hasNumber &&
-    passwordStrength.value.hasSpecial &&
-    passwordStrength.value.minLength &&
-    passwordStrength.value.hasLowercase &&
-    passwordStrength.value.hasUppercase)
+  if (
+    !(
+      passwordStrength.value.hasNumber &&
+      passwordStrength.value.hasSpecial &&
+      passwordStrength.value.minLength &&
+      passwordStrength.value.hasLowercase &&
+      passwordStrength.value.hasUppercase
+    )
   ) {
-    passwordError.value = 'Password does not meet all requirements';
+    passwordError.value = 'Password does not meet all requirements'
   }
 }
 
 function clearPasswordError() {
-  passwordError.value = '';
+  passwordError.value = ''
 }
 
 function validateConfirmPassword() {
   if (!confirmPassword.value) {
-    confirmPasswordError.value = 'Confirm your password';
-    return;
+    confirmPasswordError.value = 'Confirm your password'
+    return
   }
 
   if (confirmPassword.value !== password.value) {
-    confirmPasswordError.value = 'Passwords do not match';
+    confirmPasswordError.value = 'Passwords do not match'
   }
 }
 
 function clearConfirmPasswordError() {
-  confirmPasswordError.value = '';
+  confirmPasswordError.value = ''
 }
 
 async function handleSubmit() {
@@ -145,9 +152,7 @@ async function handleSubmit() {
     <div class="w-full max-w-sm animate-fadeIn">
       <div class="mb-8 text-center">
         <h1 class="text-2xl font-semibold text-[var(--p-text-color)] mb-2">Create your account</h1>
-        <p class="text-[13px] text-[var(--p-text-muted-color)]">
-          Track your expenses easily
-        </p>
+        <p class="text-[13px] text-[var(--p-text-muted-color)]">Track your expenses easily</p>
       </div>
 
       <div
@@ -208,33 +213,68 @@ async function handleSubmit() {
             <!-- Password Strength Requirements -->
             <div class="mt-2 space-y-1 text-[12px]">
               <div
-                :class="passwordStrength.minLength ? 'text-[var(--p-green-500)]' : 'text-[var(--p-text-muted-color)]'">
-                <i :class="passwordStrength.minLength ? 'pi pi-check' : 'pi pi-circle'"
-                   class="text-[10px] mr-1"></i>
+                :class="
+                  passwordStrength.minLength
+                    ? 'text-[var(--p-green-500)]'
+                    : 'text-[var(--p-text-muted-color)]'
+                "
+              >
+                <i
+                  :class="passwordStrength.minLength ? 'pi pi-check' : 'pi pi-circle'"
+                  class="text-[10px] mr-1"
+                ></i>
                 At least 8 characters
               </div>
               <div
-                :class="passwordStrength.hasUppercase ? 'text-[var(--p-green-500)]' : 'text-[var(--p-text-muted-color)]'">
-                <i :class="passwordStrength.hasUppercase ? 'pi pi-check' : 'pi pi-circle'"
-                   class="text-[10px] mr-1"></i>
+                :class="
+                  passwordStrength.hasUppercase
+                    ? 'text-[var(--p-green-500)]'
+                    : 'text-[var(--p-text-muted-color)]'
+                "
+              >
+                <i
+                  :class="passwordStrength.hasUppercase ? 'pi pi-check' : 'pi pi-circle'"
+                  class="text-[10px] mr-1"
+                ></i>
                 One uppercase letter (A-Z)
               </div>
               <div
-                :class="passwordStrength.hasLowercase ? 'text-[var(--p-green-500)]' : 'text-[var(--p-text-muted-color)]'">
-                <i :class="passwordStrength.hasLowercase ? 'pi pi-check' : 'pi pi-circle'"
-                   class="text-[10px] mr-1"></i>
+                :class="
+                  passwordStrength.hasLowercase
+                    ? 'text-[var(--p-green-500)]'
+                    : 'text-[var(--p-text-muted-color)]'
+                "
+              >
+                <i
+                  :class="passwordStrength.hasLowercase ? 'pi pi-check' : 'pi pi-circle'"
+                  class="text-[10px] mr-1"
+                ></i>
                 One lowercase letter (a-z)
               </div>
               <div
-                :class="passwordStrength.hasNumber ? 'text-[var(--p-green-500)]' : 'text-[var(--p-text-muted-color)]'">
-                <i :class="passwordStrength.hasNumber ? 'pi pi-check' : 'pi pi-circle'"
-                   class="text-[10px] mr-1"></i>
+                :class="
+                  passwordStrength.hasNumber
+                    ? 'text-[var(--p-green-500)]'
+                    : 'text-[var(--p-text-muted-color)]'
+                "
+              >
+                <i
+                  :class="passwordStrength.hasNumber ? 'pi pi-check' : 'pi pi-circle'"
+                  class="text-[10px] mr-1"
+                ></i>
                 One number (0-9)
               </div>
               <div
-                :class="passwordStrength.hasSpecial ? 'text-[var(--p-green-500)]' : 'text-[var(--p-text-muted-color)]'">
-                <i :class="passwordStrength.hasSpecial ? 'pi pi-check' : 'pi pi-circle'"
-                   class="text-[10px] mr-1"></i>
+                :class="
+                  passwordStrength.hasSpecial
+                    ? 'text-[var(--p-green-500)]'
+                    : 'text-[var(--p-text-muted-color)]'
+                "
+              >
+                <i
+                  :class="passwordStrength.hasSpecial ? 'pi pi-check' : 'pi pi-circle'"
+                  class="text-[10px] mr-1"
+                ></i>
                 One special character (!@#$%^&*._-)
               </div>
             </div>
@@ -259,8 +299,10 @@ async function handleSubmit() {
               @input="clearConfirmPasswordError"
             />
             <transition name="slideDown">
-              <p v-if="confirmPasswordError"
-                 class="text-[12px] text-[var(--p-red-500)] font-medium">
+              <p
+                v-if="confirmPasswordError"
+                class="text-[12px] text-[var(--p-red-500)] font-medium"
+              >
                 {{ confirmPasswordError }}
               </p>
             </transition>
