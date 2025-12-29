@@ -71,7 +71,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="flex items-center justify-center px-4 pt-20 pb-12 min-h-screen">
+  <div class="flex items-start justify-center px-4 pt-20 pb-12 min-h-screen">
     <div class="w-full max-w-sm animate-fadeIn">
       <div class="mb-8 text-center">
         <h1 class="text-2xl font-semibold text-[var(--p-text-color)] mb-2">Welcome back</h1>

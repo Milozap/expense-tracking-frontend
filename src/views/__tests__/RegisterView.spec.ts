@@ -378,6 +378,26 @@ describe('RegisterView', () => {
     expect(errorMessage).not.toContain('do not match')
   })
 
+  it('should clear confirm password error when password is changed to match confirm password during password validation', async () => {
+    const wrapper = mountComponent()
+
+    const passwordInput = wrapper.find('#password')
+    const confirmPasswordInput = wrapper.find('#confirmPassword')
+
+    await passwordInput.setValue('TestPass123!')
+    await confirmPasswordInput.setValue('Different123!')
+    await confirmPasswordInput.trigger('blur')
+    await nextTick()
+
+    expect(wrapper.text()).toContain('Passwords do not match')
+
+    await passwordInput.setValue('Different123!')
+    await passwordInput.trigger('blur')
+    await nextTick()
+
+    expect(wrapper.text()).not.toContain('Passwords do not match')
+  })
+
   it('should disable submit button when form is invalid', () => {
     const wrapper = mountComponent()
 
