@@ -19,7 +19,12 @@ export async function login(username: string, password: string) {
   return response.json()
 }
 
-export async function register(username: string, email: string, password: string) {
+export async function register(
+  username: string,
+  email: string,
+  password: string,
+  passwordConfirm?: string,
+) {
   const errorMessages = new Map([
     [409, 'Account already exists'],
     [422, 'Password does not meet requirements'],
@@ -35,6 +40,7 @@ export async function register(username: string, email: string, password: string
       username,
       email,
       password,
+      password_confirm: passwordConfirm ?? password,
     }),
   })
 

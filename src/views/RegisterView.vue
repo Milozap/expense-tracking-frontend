@@ -16,8 +16,8 @@ const email = ref<string>('')
 const emailError = ref<string>('')
 const password = ref<string>('')
 const passwordError = ref<string>('')
-const confirmPassword = ref<string>('')
-const confirmPasswordError = ref<string>('')
+const passwordConfirm = ref<string>('')
+const passwordConfirmError = ref<string>('')
 const isLoading = ref(false)
 
 const isFormValid = computed(() => {
@@ -25,19 +25,19 @@ const isFormValid = computed(() => {
     username.value &&
     email.value &&
     password.value &&
-    confirmPassword.value
+    passwordConfirm.value
   )
 
   const hasNoValidationErrors = !(
     usernameError.value ||
     emailError.value ||
     passwordError.value ||
-    confirmPasswordError.value
+    passwordConfirmError.value
   )
 
   const isPasswordStrong = Object.values(passwordStrength.value).every(Boolean)
 
-  const passwordsMatch = password.value === confirmPassword.value
+  const passwordsMatch = password.value === passwordConfirm.value
 
   return hasRequiredFields && hasNoValidationErrors && isPasswordStrong && passwordsMatch
 })
@@ -102,8 +102,8 @@ function validatePassword() {
     passwordError.value = 'Password does not meet all requirements'
   }
 
-  if (confirmPassword.value && password.value === confirmPassword.value) {
-    clearConfirmPasswordError()
+  if (passwordConfirm.value && password.value === passwordConfirm.value) {
+    clearPasswordConfirmError()
   }
 }
 
@@ -111,26 +111,26 @@ function clearPasswordError() {
   passwordError.value = ''
 }
 
-function validateConfirmPassword() {
-  if (!confirmPassword.value) {
-    confirmPasswordError.value = 'Confirm your password'
+function validatePasswordConfirm() {
+  if (!passwordConfirm.value) {
+    passwordConfirmError.value = 'Confirm your password'
     return
   }
 
-  if (confirmPassword.value !== password.value) {
-    confirmPasswordError.value = 'Passwords do not match'
+  if (passwordConfirm.value !== password.value) {
+    passwordConfirmError.value = 'Passwords do not match'
   }
 }
 
-function clearConfirmPasswordError() {
-  confirmPasswordError.value = ''
+function clearPasswordConfirmError() {
+  passwordConfirmError.value = ''
 }
 
 async function handleSubmit() {
   isLoading.value = true
 
   try {
-    await auth.register(username.value, email.value, password.value)
+    await auth.register(username.value, email.value, password.value, passwordConfirm.value)
   } catch (error) {
     isLoading.value = false
     console.error(error)
@@ -182,7 +182,6 @@ async function handleSubmit() {
             </transition>
           </div>
 
-          <!-- Email Field -->
           <div class="flex flex-col gap-2 animate-slideUp" style="--animation-delay: 0.3s">
             <label class="text-[13px] font-semibold" for="email">Email</label>
             <InputText
@@ -201,7 +200,6 @@ async function handleSubmit() {
             </transition>
           </div>
 
-          <!-- Password Field -->
           <div class="flex flex-col gap-2 animate-slideUp" style="--animation-delay: 0.4s">
             <label class="text-[13px] font-semibold" for="password">Password</label>
             <InputText
@@ -214,7 +212,6 @@ async function handleSubmit() {
               @input="clearPasswordError"
             />
 
-            <!-- Password Strength Requirements -->
             <div class="mt-2 space-y-1 text-[12px]">
               <div
                 :class="
@@ -290,24 +287,23 @@ async function handleSubmit() {
             </transition>
           </div>
 
-          <!-- Confirm Password Field -->
           <div class="flex flex-col gap-2 animate-slideUp" style="--animation-delay: 0.5s">
-            <label class="text-[13px] font-semibold" for="confirmPassword">Confirm Password</label>
+            <label class="text-[13px] font-semibold" for="passwordConfirm">Confirm Password</label>
             <InputText
-              id="confirmPassword"
-              v-model="confirmPassword"
+              id="passwordConfirm"
+              v-model="passwordConfirm"
               type="password"
               placeholder="••••••••"
               class="w-full"
-              @blur="validateConfirmPassword"
-              @input="clearConfirmPasswordError"
+              @blur="validatePasswordConfirm"
+              @input="clearPasswordConfirmError"
             />
             <transition name="slideDown">
               <p
-                v-if="confirmPasswordError"
+                v-if="passwordConfirmError"
                 class="text-[12px] text-[var(--p-red-500)] font-medium"
               >
-                {{ confirmPasswordError }}
+                {{ passwordConfirmError }}
               </p>
             </transition>
           </div>

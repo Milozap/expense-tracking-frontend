@@ -241,7 +241,7 @@ describe('Auth Store', () => {
       () => new Promise((resolve) => setTimeout(() => resolve({ access: 'token' }), 100)),
     )
 
-    const promise = auth.register('testuser', 'test@example.com', 'TestPass123!')
+    const promise = auth.register('testuser', 'test@example.com', 'TestPass123!', 'TestPass123!')
     expect(auth.isLoading).toBe(true)
     await promise
   })
@@ -256,7 +256,7 @@ describe('Auth Store', () => {
       access: 'test-access-token',
     })
 
-    await auth.register('testuser', 'test@example.com', 'TestPass123!')
+    await auth.register('testuser', 'test@example.com', 'TestPass123!', 'TestPass123!')
     expect(auth.isLoading).toBe(false)
   })
 
@@ -266,7 +266,7 @@ describe('Auth Store', () => {
     vi.mocked(api.register).mockRejectedValue(new Error('Username already exists'))
 
     try {
-      await auth.register('existinguser', 'test@example.com', 'TestPass123!')
+      await auth.register('existinguser', 'test@example.com', 'TestPass123!', 'TestPass123!')
     } catch {}
     expect(auth.isLoading).toBe(false)
   })
@@ -277,7 +277,7 @@ describe('Auth Store', () => {
       access: 'test-access-token',
     })
 
-    await auth.register('testuser', 'test@example.com', 'TestPass123!')
+    await auth.register('testuser', 'test@example.com', 'TestPass123!', 'TestPass123!')
     expect(auth.isAuthenticated).toBe(true)
   })
 
@@ -287,7 +287,7 @@ describe('Auth Store', () => {
       access: 'test-access-token',
     })
 
-    await auth.register('testuser', 'test@example.com', 'TestPass123!')
+    await auth.register('testuser', 'test@example.com', 'TestPass123!', 'TestPass123!')
     expect(api.setTokens).toHaveBeenCalledWith('test-access-token')
   })
 
@@ -296,8 +296,17 @@ describe('Auth Store', () => {
     const auth = useAuthStore()
     vi.mocked(api.register).mockRejectedValue(new Error('Username already exists'))
 
-    await expect(auth.register('existinguser', 'test@example.com', 'TestPass123!')).rejects.toThrow(
-      'Username already exists',
-    )
+    await expect(
+      auth.register('existinguser', 'test@example.com', 'TestPass123!', 'TestPass123!'),
+    ).rejects.toThrow('Username already exists')
+  })
+
+  it('should forward passwordConfirm to api.register', async () => {
+    const auth = useAuthStore()
+    vi.mocked(api.register).mockResolvedValue({ access: 'x' })
+
+    await auth.register('u', 'e@example.com', 'P@ssw0rd!', 'P@ssw0rd!')
+
+    expect(api.register).toHaveBeenCalledWith('u', 'e@example.com', 'P@ssw0rd!', 'P@ssw0rd!')
   })
 })

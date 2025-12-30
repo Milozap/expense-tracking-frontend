@@ -42,10 +42,10 @@ export const useAuthStore = defineStore('auth', {
       this.userId = null
       this.isAuthenticated = false
     },
-    async register(username: string, email: string, password: string) {
+    async register(username: string, email: string, password: string, passwordConfirm: string) {
       this.isLoading = true
       try {
-        const userInfo = await register(username, email, password)
+        const userInfo = await register(username, email, password, passwordConfirm)
         setTokens(userInfo.access)
         this.userId = this.decodeUserIdFromToken(userInfo.access)
         this.isAuthenticated = true

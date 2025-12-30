@@ -78,9 +78,9 @@ describe('RegisterView', () => {
   it('should render confirm password input field', () => {
     const wrapper = mountComponent()
 
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
-    expect(confirmPasswordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.attributes('type')).toBe('password')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
+    expect(passwordConfirmInput.exists()).toBe(true)
+    expect(passwordConfirmInput.attributes('type')).toBe('password')
   })
 
   it('should render submit button with correct label', () => {
@@ -331,10 +331,10 @@ describe('RegisterView', () => {
   it('should show error when confirm password is empty on blur', async () => {
     const wrapper = mountComponent()
 
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
-    expect(confirmPasswordInput.exists()).toBe(true)
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
+    expect(passwordConfirmInput.exists()).toBe(true)
 
-    await confirmPasswordInput.trigger('blur')
+    await passwordConfirmInput.trigger('blur')
     await nextTick()
 
     const errorMessage = wrapper.text()
@@ -345,13 +345,13 @@ describe('RegisterView', () => {
     const wrapper = mountComponent()
 
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
     expect(passwordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.exists()).toBe(true)
+    expect(passwordConfirmInput.exists()).toBe(true)
 
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('DifferentPass123!')
-    await confirmPasswordInput.trigger('blur')
+    await passwordConfirmInput.setValue('DifferentPass123!')
+    await passwordConfirmInput.trigger('blur')
     await nextTick()
 
     const errorMessage = wrapper.text()
@@ -362,16 +362,16 @@ describe('RegisterView', () => {
     const wrapper = mountComponent()
 
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
     expect(passwordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.exists()).toBe(true)
+    expect(passwordConfirmInput.exists()).toBe(true)
 
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('DifferentPass123!')
-    await confirmPasswordInput.trigger('blur')
+    await passwordConfirmInput.setValue('DifferentPass123!')
+    await passwordConfirmInput.trigger('blur')
     await nextTick()
 
-    await confirmPasswordInput.setValue('TestPass123!')
+    await passwordConfirmInput.setValue('TestPass123!')
     await nextTick()
 
     const errorMessage = wrapper.text()
@@ -382,11 +382,11 @@ describe('RegisterView', () => {
     const wrapper = mountComponent()
 
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
 
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('Different123!')
-    await confirmPasswordInput.trigger('blur')
+    await passwordConfirmInput.setValue('Different123!')
+    await passwordConfirmInput.trigger('blur')
     await nextTick()
 
     expect(wrapper.text()).toContain('Passwords do not match')
@@ -414,16 +414,16 @@ describe('RegisterView', () => {
     const usernameInput = wrapper.find('#username')
     const emailInput = wrapper.find('#email')
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
     expect(usernameInput.exists()).toBe(true)
     expect(emailInput.exists()).toBe(true)
     expect(passwordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.exists()).toBe(true)
+    expect(passwordConfirmInput.exists()).toBe(true)
 
     await usernameInput.setValue('testuser')
     await emailInput.setValue('test@example.com')
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('TestPass123!')
+    await passwordConfirmInput.setValue('TestPass123!')
     await nextTick()
 
     const buttons = wrapper.findAllComponents(Button)
@@ -443,16 +443,16 @@ describe('RegisterView', () => {
     const usernameInput = wrapper.find('#username')
     const emailInput = wrapper.find('#email')
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
     expect(usernameInput.exists()).toBe(true)
     expect(emailInput.exists()).toBe(true)
     expect(passwordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.exists()).toBe(true)
+    expect(passwordConfirmInput.exists()).toBe(true)
 
     await usernameInput.setValue('testuser')
     await emailInput.setValue('test@example.com')
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('TestPass123!')
+    await passwordConfirmInput.setValue('TestPass123!')
     await nextTick()
 
     const buttons = wrapper.findAllComponents(Button)
@@ -466,7 +466,7 @@ describe('RegisterView', () => {
     expect(submitButton?.attributes('disabled')).toBeDefined()
   })
 
-  it('should call auth register with username, email, and password on form submission', async () => {
+  it('should call auth register with username, email, password and passwordConfirm on form submission', async () => {
     const registerSpy = vi.spyOn(auth, 'register').mockResolvedValue(undefined)
 
     const wrapper = mountComponent()
@@ -474,23 +474,28 @@ describe('RegisterView', () => {
     const usernameInput = wrapper.find('#username')
     const emailInput = wrapper.find('#email')
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
     expect(usernameInput.exists()).toBe(true)
     expect(emailInput.exists()).toBe(true)
     expect(passwordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.exists()).toBe(true)
+    expect(passwordConfirmInput.exists()).toBe(true)
 
     await usernameInput.setValue('testuser')
     await emailInput.setValue('test@example.com')
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('TestPass123!')
+    await passwordConfirmInput.setValue('TestPass123!')
     await nextTick()
 
     const form = wrapper.find('form')
     await form.trigger('submit')
     await nextTick()
 
-    expect(registerSpy).toHaveBeenCalledWith('testuser', 'test@example.com', 'TestPass123!')
+    expect(registerSpy).toHaveBeenCalledWith(
+      'testuser',
+      'test@example.com',
+      'TestPass123!',
+      'TestPass123!',
+    )
   })
 
   it('should show success toast on successful registration', async () => {
@@ -501,16 +506,16 @@ describe('RegisterView', () => {
     const usernameInput = wrapper.find('#username')
     const emailInput = wrapper.find('#email')
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
     expect(usernameInput.exists()).toBe(true)
     expect(emailInput.exists()).toBe(true)
     expect(passwordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.exists()).toBe(true)
+    expect(passwordConfirmInput.exists()).toBe(true)
 
     await usernameInput.setValue('testuser')
     await emailInput.setValue('test@example.com')
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('TestPass123!')
+    await passwordConfirmInput.setValue('TestPass123!')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -533,16 +538,16 @@ describe('RegisterView', () => {
     const usernameInput = wrapper.find('#username')
     const emailInput = wrapper.find('#email')
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
     expect(usernameInput.exists()).toBe(true)
     expect(emailInput.exists()).toBe(true)
     expect(passwordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.exists()).toBe(true)
+    expect(passwordConfirmInput.exists()).toBe(true)
 
     await usernameInput.setValue('testuser')
     await emailInput.setValue('test@example.com')
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('TestPass123!')
+    await passwordConfirmInput.setValue('TestPass123!')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -562,16 +567,16 @@ describe('RegisterView', () => {
     const usernameInput = wrapper.find('#username')
     const emailInput = wrapper.find('#email')
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
     expect(usernameInput.exists()).toBe(true)
     expect(emailInput.exists()).toBe(true)
     expect(passwordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.exists()).toBe(true)
+    expect(passwordConfirmInput.exists()).toBe(true)
 
     await usernameInput.setValue('existinguser')
     await emailInput.setValue('test@example.com')
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('TestPass123!')
+    await passwordConfirmInput.setValue('TestPass123!')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -596,16 +601,16 @@ describe('RegisterView', () => {
     const usernameInput = wrapper.find('#username')
     const emailInput = wrapper.find('#email')
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
     expect(usernameInput.exists()).toBe(true)
     expect(emailInput.exists()).toBe(true)
     expect(passwordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.exists()).toBe(true)
+    expect(passwordConfirmInput.exists()).toBe(true)
 
     await usernameInput.setValue('existinguser')
     await emailInput.setValue('test@example.com')
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('TestPass123!')
+    await passwordConfirmInput.setValue('TestPass123!')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -630,16 +635,16 @@ describe('RegisterView', () => {
     const usernameInput = wrapper.find('#username')
     const emailInput = wrapper.find('#email')
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
     expect(usernameInput.exists()).toBe(true)
     expect(emailInput.exists()).toBe(true)
     expect(passwordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.exists()).toBe(true)
+    expect(passwordConfirmInput.exists()).toBe(true)
 
     await usernameInput.setValue('testuser')
     await emailInput.setValue('existing@example.com')
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('TestPass123!')
+    await passwordConfirmInput.setValue('TestPass123!')
     await nextTick()
 
     const form = wrapper.find('form')
@@ -664,16 +669,16 @@ describe('RegisterView', () => {
     const usernameInput = wrapper.find('#username')
     const emailInput = wrapper.find('#email')
     const passwordInput = wrapper.find('#password')
-    const confirmPasswordInput = wrapper.find('#confirmPassword')
+    const passwordConfirmInput = wrapper.find('#passwordConfirm')
     expect(usernameInput.exists()).toBe(true)
     expect(emailInput.exists()).toBe(true)
     expect(passwordInput.exists()).toBe(true)
-    expect(confirmPasswordInput.exists()).toBe(true)
+    expect(passwordConfirmInput.exists()).toBe(true)
 
     await usernameInput.setValue('testuser')
     await emailInput.setValue('test@example.com')
     await passwordInput.setValue('TestPass123!')
-    await confirmPasswordInput.setValue('TestPass123!')
+    await passwordConfirmInput.setValue('TestPass123!')
     await nextTick()
 
     const form = wrapper.find('form')

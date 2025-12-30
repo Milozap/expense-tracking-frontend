@@ -70,7 +70,7 @@ describe('API Service', () => {
     await expect(login('testuser', 'testpass')).rejects.toThrow('Network error')
   })
 
-  it('should send POST request to /api/auth/register/ with username, email, and password', async () => {
+  it('should send POST request to /api/auth/register/ with username, email, password and passwordConfirm', async () => {
     const mockResponse = {
       ok: true,
       json: vi.fn().mockResolvedValue({
@@ -79,7 +79,14 @@ describe('API Service', () => {
     }
     global.fetch = vi.fn().mockResolvedValue(mockResponse)
 
-    await register('testuser', 'test@example.com', 'TestPass123!')
+    await (
+      register as unknown as (
+        username: string,
+        email: string,
+        password: string,
+        passwordConfirm: string,
+      ) => Promise<unknown>
+    )('testuser', 'test@example.com', 'TestPass123!', 'TestPass123!')
 
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining('/api/auth/register/'),
@@ -92,6 +99,7 @@ describe('API Service', () => {
           username: 'testuser',
           email: 'test@example.com',
           password: 'TestPass123!',
+          password_confirm: 'TestPass123!',
         }),
       }),
     )
